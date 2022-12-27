@@ -11,9 +11,9 @@ word_dict = df.to_dict('records')
 
 def random_card():
     '''Generate random word for cards'''
-    rand_num = int(random.random() * len(word_dict))
-    rand_word = word_dict[rand_num]['WORD']
-    canvas.itemconfig(word, text=rand_word)
+    rand_word = random.choice(word_dict)
+    canvas.itemconfig(heading, text='Word')
+    canvas.itemconfig(word, text=rand_word['WORD'])
 
 
 # --------------------- UI SETUP ------------------------ #
@@ -32,9 +32,10 @@ canvas.grid(row=0, column=0, columnspan=2)
 
 # Texts on canvas
 heading = canvas.create_text(
-    400, 150, text='Title', fill="black", font=("Ariel", 40, "italic"))
+    400, 150, text='', fill="black", font=("Ariel", 40, "italic"))
 word = canvas.create_text(
-    400, 263, text='word', fill="black", font=("Ariel", 60, "bold"))
+    400, 263, text='', fill="black", font=("Ariel", 60, "bold"))
+random_card()
 
 # Creating the btns
 wrong = PhotoImage(file="./images/wrong.png")
