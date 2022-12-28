@@ -3,10 +3,17 @@ import pandas as pd
 import random
 BACKGROUND_COLOR = "#B1DDC6"
 
-# --------------------- FLASH CARD RANDOMIZATION ------------------------ #
-df = pd.read_csv('./data/word_meanings.csv')
-word_dict = df.to_dict('records')
+# --------------------- WORDS FETCH ------------------------ #
+try:
+    df = pd.read_csv('./data/words_to_learn.csv')
+except FileNotFoundError:
+    df = pd.read_csv('./data/word_meanings.csv')
+finally:
+    word_dict = df.to_dict('records')
+
 rand_word = {}
+
+# --------------------- FLASH CARD RANDOMIZATION ------------------------ #
 
 
 def random_card():
@@ -19,6 +26,15 @@ def random_card():
         word, text=rand_word['WORD'], fill="black", font=("Ariel", 60, "bold"))
     canvas.itemconfig(canvas_img, image=card_white_img)
     flip_timer = window.after(3000, func=flip_card)
+
+# --------------------- REMOVE CARD FROM DECK ------------------------ #
+
+
+def card_removal():
+    word_dict.remove(rand_word)
+    data = pd.DataFrame(word_dict)
+    data.to_csv("./data/words_to_learn.csv", index=False)
+    random_card()
 
 
 # --------------------- FLIP CARD ------------------------ #
@@ -61,7 +77,7 @@ button_w.grid(row=1, column=0)
 
 correct = PhotoImage(file="./images/right.png")
 button_c = Button(image=correct, highlightthickness=0,
-                  borderwidth=0, command=random_card)
+                  borderwidth=0, command=card_removal)
 button_c.grid(row=1, column=1)
 
 window.mainloop()
